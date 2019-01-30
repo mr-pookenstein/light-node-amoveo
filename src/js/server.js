@@ -2,9 +2,9 @@
 
 local_ip = [127,0,0,1];
 local_port = 8081;
-// var server_ip = document.createElement("INPUT");
+//var server_ip = document.createElement("INPUT");
 // server_ip.setAttribute("type", "text");
-//server_ip.value = "159.89.106.253";// server
+//server_ip.value = "13.58.98.13";// server
 //server_ip.value = document.URL.split("/")[2].split(":")[0];
 //var server_ip_info = document.createElement("h8");
 //server_ip_info.innerHTML = "channel node IP: ";
@@ -28,9 +28,10 @@ if (document.URL[0] == 'f') {
 //document.body.appendChild(document.createElement("br"));
 
 function get_port() {
-    return parseInt("8070", 10);
+    return parseInt("8080", 10);
 }
 function get_ip() {
-    //return JSON.parse(server_ip.value);
-    return "13.58.98.13";
+//    return JSON.parse({13,58,98,13});
+    //return "116.203.36.161";
+return "139.59.144.76";
 }

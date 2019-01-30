@@ -1,7 +1,7 @@
 function headers_main() {
-    // var mode = "production";
+     var mode = "production";
     //var mode = "test";
-    var mode = "testnet";
+//    var mode = "testnet";
     var forks;
     var retarget_frequency;
     var top_header;

@@ -105,20 +105,29 @@ function channels_main() {
     oid.setAttribute("type", "text");
     var oid_info = document.createElement("h8");
     oid_info.innerHTML = "market: ";
+
+    oid.value = "MklLoPxcTJIe6kzKtCGiU2RUWf/wGUKYMB0B9/0crsw=";
+
+//    oid.value = "";
+
     var price = document.createElement("INPUT");
     price.setAttribute("type", "text");
     var price_info = document.createElement("h8");
-    price_info.innerHTML = "price (between 0 and 100) : ";
+    price_info.innerHTML = "Price (in VEOBTC): ";
     var trade_type = document.createElement("INPUT");
     trade_type.setAttribute("type", "text");
     var trade_type_info = document.createElement("h8");
-    trade_type_info.innerHTML = "trade type (true/false): ";
+    trade_type_info.innerHTML = "Long or short: ";
     var trade_amount = document.createElement("INPUT");
     trade_amount.setAttribute("type", "text");
     var trade_amount_info = document.createElement("h8");
-    trade_amount_info.innerHTML = "amount: ";
+    trade_amount_info.innerHTML = "Amount of VEO: ";
     var height_button = button_maker2("Open channel", function() { })
     var cost_button = button_maker2("Calculate fee ", function() { })
+
+    var long_button = button_maker2("Long", function() { })
+    var short_button = button_maker2("Short", function() { })
+
     var spend_amount = document.createElement("INPUT");
     spend_amount.setAttribute("type", "text");
     var amount_info = document.createElement("h8");
@@ -135,20 +144,20 @@ function channels_main() {
     lifespan_info.innerHTML = "how long should the channel last? In blocks. Longer costs more.";
     var balance_div = document.createElement("div");
     balance_div.innerHTML = "your balance unknown";
-    var channel_balance_button = button_maker2("check channel balance", function() { });
+    var channel_balance_button = button_maker2("Check balance", function() { });
     var market_title = document.createElement("h3");
-    market_title.innerHTML = "markets";
+    market_title.innerHTML = "Betting Interface";
     var market_link = document.createElement("a");
     market_link.innerHTML = "<a href=\"/explorer.html\">see the available markets here</a>";
     //    market_link.innerHTML = "see the available markets here ";
     //    market_link.href = "http://159.89.106.253:8080/explorer.html";
     var bet_example = document.createElement("h8");
     bet_example.innerHTML = "if price is 30, and amount is 1, then you can win 0.7, or you can lose 0.3.";
-    var button = button_maker2("make bet ", make_bet);
+    var button = button_maker2("Place order", make_bet);
     var bet_update_button = button_maker2("check if any bets have been settled", function() {});
     var combine_cancel_button = button_maker2("combine bets in opposite directions to recover the money from the market ", function() {});
-    var list_bets_button = button_maker2("update balance of off-chain assets ", bets_object.main);
-    var close_channel_button = button_maker2("close channel", function(){ return; });
+    var list_bets_button = button_maker2("Check positions ", bets_object.main);
+    var close_channel_button = button_maker2("Close channel", function(){ return; });
     var lightning_button = button_maker2("lightning spend", function(){ return; });
     var lightning_amount = document.createElement("INPUT");
     lightning_amount.setAttribute("type", "text");
@@ -205,6 +214,30 @@ function calculate_fee(){
 
   }
 
+function golong(){
+  trade_type.value = "long";
+  trade_type.innerHTML = "long";
+  console.log(trade_type.value);
+
+}
+
+function goshort(){
+  trade_type.value = "short";
+  trade_type.innerHTML = "short";
+  console.log(trade_type.value);
+
+}
+
+
+function returnTrueFalse(_bool2) {
+  if (_bool2  == "long"){
+    return "true";
+  } else if (_bool2 == "short"){
+    return "false";
+  } else {
+    return _bool2;
+  }
+}
 
 	console.log(pubkey);
         load_button.onchange = function() {return load_channels(pubkey) };
@@ -222,10 +255,10 @@ function calculate_fee(){
         //channel_server_mode.innerHTML = "channel with a server mode";
         //div.appendChild(channel_server_mode);
         div.appendChild(stable_title);
-        div.appendChild(tv_display);
+  //      div.appendChild(tv_display);
 
   //      div.appendChild(channel_sync_button);
-        div.appendChild(br());
+      //  div.appendChild(br());
         var bets_div = document.createElement("div");
 	bets_div.id = "bets_div";
         //check if we have a chnnel with the server yet.
@@ -236,10 +269,18 @@ function calculate_fee(){
 
             cost_button.onclick = function() { return calculate_fee() };
 
-            append_children(div, [amount_info, spend_amount, br(), height_button, cost_button, br()]);
+            append_children(div, [tv_display, br(), amount_info, spend_amount, br(), br(), height_button, cost_button, br()]);
         } else {
             console.log("give interface for making bets in channels.");
-            append_children(div, [close_channel_button, br(), balance_div, channel_balance_button, br(), lightning_button, lightning_amount_info, lightning_amount, lightning_to_info, lightning_to, br(), market_title, market_link, br(), bet_example, br(), price_info, price, trade_type_info, trade_type, trade_amount_info, trade_amount, oid_info, oid, button, br(), bet_update_button, br(), br(), combine_cancel_button, br(), br(), list_bets_button, br(), bets_div]);
+            //we want to put some buttons here to go long or short
+            long_button.onclick = function() { return golong() };
+
+            short_button.onclick = function() { return goshort() };
+
+//            append_children(div, [long_button,short_button, br(), price_info, price,br(),trade_type_info, trade_type, br(),trade_amount_info, trade_amount, br(), oid_info, oid, button, br(), bet_update_button, br(), br(), combine_cancel_button, br(), br(), list_bets_button, br(), bets_div,close_channel_button, br(), balance_div, channel_balance_button]);
+
+            append_children(div, [long_button,short_button, br(), br(), price_info, price, br(),trade_amount_info, trade_amount, br(), trade_type_info, trade_type, br(), br(), button, br(), br(), bets_div, br(), balance_div, br(), channel_balance_button,list_bets_button,br(),br(),close_channel_button]);
+
             lightning_button.onclick = function() { lightning_spend(pubkey); };
             channel_balance_button.onclick = function() {refresh_balance(pubkey);};
             bet_update_button.onclick = function() {
@@ -305,7 +346,18 @@ function calculate_fee(){
     function make_bet2(l) {
         var price_final = Math.floor(100 * parseFloat(price.value, 10));
         var type_final;
-        var ttv = trade_type.value;
+
+    //    var ttv =
+
+        if (trade_type.value  == "long"){
+          var ttv = "true";
+        } else if (trade_type.value == "short"){
+          var ttv = "false";
+        } else {
+          var ttv = trade_type.value;
+        };
+
+//        var ttv = returnTrueFalse(trade_type.value);
         if ((ttv == "true") ||
             (ttv == 1) ||
             (ttv == "1") ||
@@ -457,6 +509,12 @@ function calculate_fee(){
         channel_warning();
         refresh_channels_interfaces(pubkey);
     }
+
+    function refresh_balance2(pubkey){
+      //  refresh_balance(pubkey);
+      bets_object.main;
+
+    }
     function refresh_balance(pubkey) {
         //console.log(channel_manager[pubkey]);
         var cd = read(pubkey);
@@ -475,11 +533,10 @@ function calculate_fee(){
 	    console.log(JSON.stringify([val[4], amount, betAmount, val[5], token_units()]));
             var mybalance = ((val[4] - amount - betAmount)/ token_units()).toString();
             var serverbalance = ((val[5] + amount) / token_units()).toString();
-            balance_div.innerHTML = ("server balance: ").concat(
-                serverbalance).concat("your balance: ").concat(
-                    mybalance).concat("time left in blocks: ").concat(
-			(cd.expiration - height).toString());
-
+            balance_div.innerHTML = ("Server balance: ").concat(
+                serverbalance).concat("").concat(", Your balance: ").concat(
+                    mybalance);
+                  //  .concat(" Time left in blocks: ").concat(cd.expiration - height).toString())
         });
     }
     function channel_feeder_make_locked_payment(serverid, amount, code) {

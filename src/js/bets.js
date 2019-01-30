@@ -48,17 +48,27 @@ function bets_main() {
             if ( JSON.stringify(ssme[i-1].code) == JSON.stringify([0,0,0,0,4]) ) {
                 console.log("unmatched");
                 //console.log(JSON.stringify([i, oid, amount, "unmatched", bet[4]]));
-                order.innerHTML = "in market ".concat(oid).concat(" you have an open order to trade this many tokens ").concat(s2c(amount)).concat(", you are trading at this price: ").concat(parseFloat(((bet[4][2])/100), 10)).concat(", you are betting on outcome: ").concat(outcome);
+//                order.innerHTML = "in market ".concat(oid).concat(" you have an open order to trade this many tokens ").concat(s2c(amount)).concat(", you are trading at this price: ").concat(parseFloat(((bet[4][2])/100), 10)).concat(", you are betting on outcome: ").concat(outcome);
+
+                  order.innerHTML = ("Value: ").concat(directionize(outcome)).concat(s2c(amount)).concat(" VEO,  Order Price: ").concat(parseFloat(((bet[4][2])/100), 10)).concat("  ");
+
                 div.appendChild(order);
                 var cancel_button = document.createElement("input");
                 cancel_button.type = 'button';
                 cancel_button.value = "cancel trade";
+                cancel_button.style.right = "100px";
+                div.appendChild(cancel_button);
+
                 div.appendChild(cancel_button);
                 div.appendChild(document.createElement("br"));
                 cancel_buttons.push(cancel_button);
             } else {
                 console.log("matched");
-                order.innerHTML = ("market ").concat(oid).concat("you win if the outcome is ").concat(outcome).concat("amount ").concat(s2c(amount));
+                order.innerHTML = ("Value: ").concat(directionize(outcome)).concat(s2c(amount)).concat(" VEO,  Entry Price: ").concat(parseFloat(((bet[4][2])/100), 10));
+//                order.innerHTML = concat("Direction: ").concat(outcome).concat(" Amount (VEO): ").concat(s2c(amount).concat(" Amount (BTC): ")).concat(s2c(amount));
+//                order.innerHTML = "Direction: ".concat(outcome).concat(" Amount (VEO): ").concat(s2c(amount).concat(" Amount (BTC): ")).concat(s2c(amount));
+
+
                 oadiv.appendChild(order);
                 oadiv.appendChild(document.createElement("br"));
             }
@@ -66,10 +76,19 @@ function bets_main() {
         for (var i = 0; i < cancel_buttons.length; i++) {
             (function(k){
                 cancel_buttons[i].onclick = function() { cancel_trade(k+2, server_pubkey); };
-                
+
             })(i);
         }
     }
+
+function directionize(_bool){
+  if (_bool == "true"){
+    return "+";
+  } else{
+    return "-";
+  }
+}
+
     function cancel_trade(n, server_pubkey) {
         //the nth bet in the channel (starting at 1) is a unmatched trade that we want to cancel.
         var oldCD = channels_object.read(server_pubkey);
@@ -143,4 +162,4 @@ function bets_main() {
     }
     return {main: main, draw: draw};
 }
-var bets_object = bets_main(); 
+var bets_object = bets_main();
